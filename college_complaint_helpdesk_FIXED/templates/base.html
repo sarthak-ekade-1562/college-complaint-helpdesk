@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}College Complaint & Helpdesk{% endblock %}</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+{% if session.get('student_id') or session.get('admin_id') %}
+<!-- ============ APP SHELL (logged-in layout with sidebar) ============ -->
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <span>Helpdesk</span>
+    </div>
+
+    {% if session.get('student_id') %}
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('student_dashboard') }}" class="{{ 'active' if request.endpoint == 'student_dashboard' }}">
+        <i class="fa-solid fa-gauge"></i> Dashboard
+      </a>
+      <a href="{{ url_for('submit_complaint') }}" class="{{ 'active' if request.endpoint == 'submit_complaint' }}">
+        <i class="fa-solid fa-circle-plus"></i> Submit Complaint
+      </a>
+      <a href="{{ url_for('my_complaints') }}" class="{{ 'active' if request.endpoint in ['my_complaints', 'complaint_details'] }}">
+        <i class="fa-solid fa-list-check"></i> My Complaints
+      </a>
+      <a href="{{ url_for('profile') }}" class="{{ 'active' if request.endpoint == 'profile' }}">
+        <i class="fa-solid fa-user"></i> Profile
+      </a>
+      <a href="{{ url_for('student_logout') }}" class="logout-link">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+    {% elif session.get('admin_id') %}
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if request.endpoint == 'admin_dashboard' }}">
+        <i class="fa-solid fa-gauge"></i> Dashboard
+      </a>
+      <a href="{{ url_for('manage_complaints') }}" class="{{ 'active' if request.endpoint in ['manage_complaints', 'admin_complaint_details'] }}">
+        <i class="fa-solid fa-list-check"></i> Manage Complaints
+      </a>
+      <a href="{{ url_for('students') }}" class="{{ 'active' if request.endpoint == 'students' }}">
+        <i class="fa-solid fa-users"></i> Students
+      </a>
+      <a href="{{ url_for('admin_logout') }}" class="logout-link">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+    {% endif %}
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
+      <div class="topbar-user">
+        <i class="fa-solid fa-circle-user"></i>
+        <span>{{ session.get('student_name') or session.get('admin_username') }}</span>
+      </div>
+    </header>
+
+    <main class="content">
+      {% include "_flash.html" %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+{% else %}
+<!-- ============ PUBLIC LAYOUT (landing / login / register) ============ -->
+<nav class="navbar navbar-expand-lg public-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
+      <i class="fa-solid fa-graduation-cap"></i> College Helpdesk
+    </a>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('student_login') }}" class="btn btn-outline-light btn-sm">Student Login</a>
+      <a href="{{ url_for('admin_login') }}" class="btn btn-light btn-sm">Admin Login</a>
+    </div>
+  </div>
+</nav>
+
+<main class="public-main">
+  <div class="container py-4">
+    {% include "_flash.html" %}
+    {% block public_content %}{% endblock %}
+  </div>
+</main>
+
+<footer class="public-footer">
+  <div class="container text-center py-3">
+    <small>College Complaint &amp; Helpdesk Management System &middot; Built for CEP demonstration</small>
+  </div>
+</footer>
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

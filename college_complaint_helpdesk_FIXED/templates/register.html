@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Register - College Helpdesk{% endblock %}
+{% block public_content %}
+
+<div class="auth-card mx-auto">
+  <h2 class="auth-title"><i class="fa-solid fa-user-plus"></i> Student Registration</h2>
+  <p class="text-muted">Create your account to start submitting and tracking complaints.</p>
+
+  <form method="POST" novalidate>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="name" class="form-control" required minlength="2"
+               value="{{ form.get('name', '') }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Roll Number</label>
+        <input type="text" name="roll_number" class="form-control" required
+               value="{{ form.get('roll_number', '') }}">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required
+               value="{{ form.get('email', '') }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Department</label>
+        <select name="department" class="form-select" required>
+          <option value="" disabled {{ 'selected' if not form.get('department') }}>Select department</option>
+          {% for dept in ["Information Technology", "Computer Engineering", "Mechanical",
+                          "Civil", "Electronics & Telecommunication", "Electrical", "Other"] %}
+          <option value="{{ dept }}" {{ 'selected' if form.get('department') == dept }}>{{ dept }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Year</label>
+        <select name="year" class="form-select" required>
+          <option value="" disabled {{ 'selected' if not form.get('year') }}>Select year</option>
+          {% for yr in ["First Year", "Second Year", "Third Year", "Fourth Year"] %}
+          <option value="{{ yr }}" {{ 'selected' if form.get('year') == yr }}>{{ yr }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6"></div>
+
+      <div class="col-md-6">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" required minlength="6">
+        <small class="text-muted">At least 6 characters</small>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" required minlength="6">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mt-4">Create Account</button>
+  </form>
+
+  <p class="text-center mt-3">
+    Already have an account? <a href="{{ url_for('student_login') }}">Login here</a>
+  </p>
+</div>
+
+{% endblock %}
