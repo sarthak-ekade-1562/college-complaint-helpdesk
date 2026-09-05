@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration | CampusVoice</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-side">
+    <div class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span> CampusVoice</div>
+    <div>
+      <h2>Create your account in under a minute.</h2>
+      <p>Register with your roll number and department to start submitting complaints and tracking their progress.</p>
+    </div>
+    <p class="quote">"Registration took me thirty seconds — I was raising my first complaint right after."</p>
+  </div>
+
+  <div class="auth-main">
+    <div class="auth-card">
+      <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+      <h1>Student Registration</h1>
+      <p class="sub">Fill in your details to create a demo account.</p>
+
+      <div id="register-alert" class="alert"></div>
+
+      <form id="register-form" novalidate>
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="e.g. Aarav Sharma" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="rollNumber">Roll Number</label>
+            <input type="text" id="rollNumber" placeholder="e.g. IT2345" required>
+          </div>
+          <div class="form-group">
+            <label for="year">Year</label>
+            <select id="year" required>
+              <option value="" disabled selected>Select year</option>
+              <option value="FY">First Year (FY)</option>
+              <option value="SY">Second Year (SY)</option>
+              <option value="TY">Third Year (TY)</option>
+              <option value="Final Year">Final Year</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="you@college.edu" required>
+        </div>
+
+        <div class="form-group">
+          <label for="department">Department</label>
+          <select id="department" required>
+            <option value="" disabled selected>Select department</option>
+            <option>Information Technology</option>
+            <option>Computer Engineering</option>
+            <option>Electronics &amp; Telecommunication</option>
+            <option>Mechanical Engineering</option>
+            <option>Civil Engineering</option>
+            <option>Electrical Engineering</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Minimum 6 characters" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Re-enter password" required minlength="6">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fa-solid fa-user-plus"></i> Create Account
+        </button>
+      </form>
+
+      <p class="auth-foot">Already registered? <a href="student-login.html">Login instead</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("register-form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      hideAlert("register-alert");
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const rollNumber = document.getElementById("rollNumber").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const department = document.getElementById("department").value;
+      const year = document.getElementById("year").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (!fullName || !rollNumber || !email || !department || !year || !password || !confirmPassword) {
+        showAlert("register-alert", "Please fill in every field.", "error");
+        return;
+      }
+      if (password.length < 6) {
+        showAlert("register-alert", "Password must be at least 6 characters long.", "error");
+        return;
+      }
+      if (password !== confirmPassword) {
+        showAlert("register-alert", "Passwords do not match.", "error");
+        return;
+      }
+
+      const result = registerStudent({ fullName, rollNumber, email, department, year, password });
+      if (!result.ok) {
+        showAlert("register-alert", result.message, "error");
+        return;
+      }
+
+      showAlert("register-alert", "Account created successfully. Redirecting to login...", "success");
+      form.reset();
+      setTimeout(() => { window.location.href = "student-login.html"; }, 900);
+    });
+  });
+</script>
+</body>
+</html>

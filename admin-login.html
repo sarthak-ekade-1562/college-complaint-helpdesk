@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | CampusVoice</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-side">
+    <div class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span> CampusVoice</div>
+    <div>
+      <h2>Manage every complaint from one dashboard.</h2>
+      <p>Search, filter, update statuses and respond to students — all from a single admin console.</p>
+    </div>
+    <p class="quote">"Filtering by 'High priority + Pending' every morning takes ten seconds now."</p>
+  </div>
+
+  <div class="auth-main">
+    <div class="auth-card">
+      <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+      <h1>Admin Login</h1>
+      <p class="sub">Sign in with your administrator credentials.</p>
+
+      <div id="admin-alert" class="alert"></div>
+
+      <form id="admin-login-form" novalidate>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="admin" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter admin password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fa-solid fa-right-to-bracket"></i> Login as Admin
+        </button>
+      </form>
+
+      <div class="demo-box">
+        <strong>Demo admin credentials:</strong><br>
+        Username: <code>admin</code> &nbsp; Password: <code>admin123</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (getAdminSession()) window.location.href = "admin-dashboard.html";
+
+    const form = document.getElementById("admin-login-form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      hideAlert("admin-alert");
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!username || !password) {
+        showAlert("admin-alert", "Please enter both username and password.", "error");
+        return;
+      }
+
+      const result = loginAdmin(username, password);
+      if (!result.ok) {
+        showAlert("admin-alert", result.message, "error");
+        return;
+      }
+
+      showAlert("admin-alert", "Login successful. Redirecting...", "success");
+      setTimeout(() => { window.location.href = "admin-dashboard.html"; }, 500);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registered Students | CampusVoice</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span> CampusVoice</div>
+    <nav class="sidebar-nav">
+      <a href="admin-dashboard.html" data-page="admin-dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+      <a href="admin-complaints.html" data-page="admin-complaints.html"><i class="fa-solid fa-list-check"></i> Complaints</a>
+      <a href="admin-students.html" data-page="admin-students.html"><i class="fa-solid fa-user-graduate"></i> Students</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="who">
+        <div class="avatar">A</div>
+        <div>
+          <div class="name" id="sidebar-name">Administrator</div>
+          <div class="role">Admin Account</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm btn-block" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </aside>
+  <div class="overlay"></div>
+
+  <div class="main-content">
+    <div class="topbar">
+      <button class="hamburger" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+      <h1>Registered Students</h1>
+      <div></div>
+    </div>
+
+    <div class="page-body">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Students</h2>
+          <div class="search-box" style="max-width:280px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="student-search" placeholder="Search by name, roll or email...">
+          </div>
+        </div>
+        <div class="panel-body" id="students-table"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const session = requireAdminAuth();
+    if (!session) return;
+    document.getElementById("sidebar-name").textContent = session.username;
+    document.getElementById("logout-btn").addEventListener("click", logoutAdmin);
+
+    function refresh() {
+      const term = document.getElementById("student-search").value.trim().toLowerCase();
+      let students = readList(LS_KEYS.STUDENTS);
+      if (term) {
+        students = students.filter(s =>
+          `${s.fullName} ${s.rollNumber} ${s.email}`.toLowerCase().includes(term)
+        );
+      }
+      renderStudentsTable(document.getElementById("students-table"), students);
+    }
+
+    document.getElementById("student-search").addEventListener("input", refresh);
+    refresh();
+  });
+</script>
+</body>
+</html>

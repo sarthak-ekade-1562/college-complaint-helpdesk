@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Login | CampusVoice</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-side">
+    <div class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span> CampusVoice</div>
+    <div>
+      <h2>Track every complaint you've raised, in one place.</h2>
+      <p>Log in to view live status updates and responses from the administration on each issue you've reported.</p>
+    </div>
+    <p class="quote">"Submitted a Wi-Fi complaint on Monday, saw it marked In Progress by Tuesday morning."</p>
+  </div>
+
+  <div class="auth-main">
+    <div class="auth-card">
+      <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to home</a>
+      <h1>Student Login</h1>
+      <p class="sub">Enter your registered email or roll number to continue.</p>
+
+      <div id="login-alert" class="alert"></div>
+
+      <form id="student-login-form" novalidate>
+        <div class="form-group">
+          <label for="identifier">Email or Roll Number</label>
+          <input type="text" id="identifier" name="identifier" placeholder="you@college.edu or IT2301" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fa-solid fa-right-to-bracket"></i> Login
+        </button>
+      </form>
+
+      <p class="auth-foot">New here? <a href="register.html">Create a student account</a></p>
+
+      <div class="demo-box">
+        <strong>Demo account:</strong> Roll Number <code>IT2301</code> · Password <code>demo1234</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const existing = getCurrentStudent();
+    if (existing) window.location.href = "student-dashboard.html";
+
+    const form = document.getElementById("student-login-form");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      hideAlert("login-alert");
+
+      const identifier = document.getElementById("identifier").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!identifier || !password) {
+        showAlert("login-alert", "Please fill in both fields.", "error");
+        return;
+      }
+
+      const result = loginStudent(identifier, password);
+      if (!result.ok) {
+        showAlert("login-alert", result.message, "error");
+        return;
+      }
+
+      showAlert("login-alert", "Login successful. Redirecting...", "success");
+      setTimeout(() => { window.location.href = "student-dashboard.html"; }, 500);
+    });
+  });
+</script>
+</body>
+</html>

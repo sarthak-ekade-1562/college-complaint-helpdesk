@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Complaints | CampusVoice</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span> CampusVoice</div>
+    <nav class="sidebar-nav">
+      <a href="admin-dashboard.html" data-page="admin-dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+      <a href="admin-complaints.html" data-page="admin-complaints.html"><i class="fa-solid fa-list-check"></i> Complaints</a>
+      <a href="admin-students.html" data-page="admin-students.html"><i class="fa-solid fa-user-graduate"></i> Students</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="who">
+        <div class="avatar">A</div>
+        <div>
+          <div class="name" id="sidebar-name">Administrator</div>
+          <div class="role">Admin Account</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm btn-block" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </aside>
+  <div class="overlay"></div>
+
+  <div class="main-content">
+    <div class="topbar">
+      <button class="hamburger" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+      <h1>Manage Complaints</h1>
+      <div></div>
+    </div>
+
+    <div class="page-body">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>All Complaints</h2>
+        </div>
+        <div class="panel-body">
+          <div class="toolbar" style="margin-bottom:18px;">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="search-input" placeholder="Search by ID, title, student or roll number...">
+            </div>
+            <select id="filter-status" class="filter-select">
+              <option value="all">All Statuses</option>
+              <option>Pending</option>
+              <option>In Progress</option>
+              <option>Resolved</option>
+              <option>Rejected</option>
+            </select>
+            <select id="filter-category" class="filter-select">
+              <option value="all">All Categories</option>
+            </select>
+            <select id="filter-priority" class="filter-select">
+              <option value="all">All Priorities</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+            </select>
+          </div>
+          <div id="complaints-table"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Manage complaint modal -->
+<div class="modal-backdrop" id="manage-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-title">Manage Complaint</h3>
+      <button class="modal-close" onclick="closeModal('manage-modal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-row"><span class="k">Student</span><span class="v" id="modal-student">-</span></div>
+      <div class="detail-row"><span class="k">Category</span><span class="v" id="modal-category">-</span></div>
+      <div class="detail-row"><span class="k">Location</span><span class="v" id="modal-location">-</span></div>
+      <div class="detail-row"><span class="k">Priority</span><span class="v" id="modal-priority">-</span></div>
+      <h4 style="margin-top:18px;">Description</h4>
+      <div class="desc-box" id="modal-description">-</div>
+
+      <div class="form-group" style="margin-top:18px;">
+        <label for="modal-status-select">Update Status</label>
+        <select id="modal-status-select">
+          <option>Pending</option>
+          <option>In Progress</option>
+          <option>Resolved</option>
+          <option>Rejected</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="modal-response">Admin Response</label>
+        <textarea id="modal-response" placeholder="Write a note visible to the student..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('manage-modal')">Cancel</button>
+      <button class="btn btn-primary" id="save-changes-btn"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  let activeComplaintId = null;
+
+  function getFilters() {
+    return {
+      search: document.getElementById("search-input").value.trim(),
+      status: document.getElementById("filter-status").value,
+      category: document.getElementById("filter-category").value,
+      priority: document.getElementById("filter-priority").value
+    };
+  }
+
+  function refreshTable() {
+    const all = getAllComplaints();
+    const filtered = filterComplaints(all, getFilters());
+    renderAdminComplaintsTable(document.getElementById("complaints-table"), filtered);
+  }
+
+  function openComplaintModal(complaintId) {
+    const complaint = getComplaintById(complaintId);
+    if (!complaint) return;
+    activeComplaintId = complaintId;
+
+    document.getElementById("modal-title").textContent = `${complaint.complaintId} — ${complaint.title}`;
+    document.getElementById("modal-student").textContent = `${complaint.studentName} (${complaint.rollNumber})`;
+    document.getElementById("modal-category").textContent = complaint.category;
+    document.getElementById("modal-location").textContent = complaint.location;
+    document.getElementById("modal-priority").textContent = complaint.priority;
+    document.getElementById("modal-description").textContent = complaint.description;
+    document.getElementById("modal-status-select").value = complaint.status;
+    document.getElementById("modal-response").value = complaint.adminResponse || "";
+
+    openModal("manage-modal");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const session = requireAdminAuth();
+    if (!session) return;
+    document.getElementById("sidebar-name").textContent = session.username;
+    document.getElementById("logout-btn").addEventListener("click", logoutAdmin);
+
+    const categorySelect = document.getElementById("filter-category");
+    CATEGORIES.forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      categorySelect.appendChild(opt);
+    });
+
+    ["search-input"].forEach(id => document.getElementById(id).addEventListener("input", refreshTable));
+    ["filter-status", "filter-category", "filter-priority"].forEach(id =>
+      document.getElementById(id).addEventListener("change", refreshTable)
+    );
+
+    document.getElementById("save-changes-btn").addEventListener("click", () => {
+      if (!activeComplaintId) return;
+      const newStatus = document.getElementById("modal-status-select").value;
+      const responseText = document.getElementById("modal-response").value;
+
+      updateComplaintStatus(activeComplaintId, newStatus);
+      updateAdminResponse(activeComplaintId, responseText);
+
+      showToast(`${activeComplaintId} updated successfully.`, "success");
+      closeModal("manage-modal");
+      refreshTable();
+    });
+
+    refreshTable();
+
+    // Deep-link support: ?id=CMP-... opens the modal directly
+    const params = new URLSearchParams(window.location.search);
+    const directId = params.get("id");
+    if (directId && getComplaintById(directId)) {
+      openComplaintModal(directId);
+    }
+  });
+</script>
+</body>
+</html>

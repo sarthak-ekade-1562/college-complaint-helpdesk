@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaint Details | CampusVoice</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span> CampusVoice</div>
+    <nav class="sidebar-nav">
+      <a href="student-dashboard.html" data-page="student-dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+      <a href="submit-complaint.html" data-page="submit-complaint.html"><i class="fa-solid fa-file-circle-plus"></i> Submit Complaint</a>
+      <a href="my-complaints.html" data-page="my-complaints.html"><i class="fa-solid fa-list-check"></i> My Complaints</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="who">
+        <div class="avatar" id="sidebar-avatar">?</div>
+        <div>
+          <div class="name" id="sidebar-name">Loading...</div>
+          <div class="role" id="sidebar-roll">-</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm btn-block" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </aside>
+  <div class="overlay"></div>
+
+  <div class="main-content">
+    <div class="topbar">
+      <button class="hamburger" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+      <h1>Complaint Details</h1>
+      <a href="my-complaints.html" class="btn btn-outline btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="page-body" id="page-body-content">
+      <!-- Filled by script, or shows not-found state -->
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/student.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const student = requireStudentAuth();
+    if (!student) return;
+
+    document.getElementById("sidebar-avatar").textContent = getInitials(student.fullName);
+    document.getElementById("sidebar-name").textContent = student.fullName;
+    document.getElementById("sidebar-roll").textContent = student.rollNumber;
+    document.getElementById("logout-btn").addEventListener("click", logoutStudent);
+
+    const params = new URLSearchParams(window.location.search);
+    const complaintId = params.get("id");
+    const complaint = complaintId ? getComplaintById(complaintId) : null;
+    const container = document.getElementById("page-body-content");
+
+    if (!complaint || complaint.studentId !== student.id) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <h3>Complaint not found</h3>
+          <p>It may have been removed, or the link is incorrect.</p>
+          <a href="my-complaints.html" class="btn btn-primary" style="margin-top:14px;">Back to My Complaints</a>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="detail-grid">
+        <div>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <span style="color:var(--text-faint);font-size:.82rem;font-weight:600;">${escapeHtml(complaint.complaintId)}</span>
+                <h2 style="margin-top:4px;">${escapeHtml(complaint.title)}</h2>
+              </div>
+              <span class="badge ${statusBadgeClass(complaint.status)}">${escapeHtml(complaint.status)}</span>
+            </div>
+            <div class="panel-body">
+              <div class="detail-row"><span class="k">Category</span><span class="v">${escapeHtml(complaint.category)}</span></div>
+              <div class="detail-row"><span class="k">Location</span><span class="v">${escapeHtml(complaint.location)}</span></div>
+              <div class="detail-row"><span class="k">Priority</span><span class="v"><span class="badge ${priorityBadgeClass(complaint.priority)}">${escapeHtml(complaint.priority)}</span></span></div>
+              <div class="detail-row"><span class="k">Submitted On</span><span class="v">${formatDateTime(complaint.createdDate)}</span></div>
+              <div class="detail-row"><span class="k">Last Updated</span><span class="v">${formatDateTime(complaint.updatedDate)}</span></div>
+
+              <h4 style="margin-top:22px;">Description</h4>
+              <div class="desc-box">${escapeHtml(complaint.description)}</div>
+
+              <h4 style="margin-top:22px;">Admin Response</h4>
+              ${complaint.adminResponse
+                ? `<div class="response-box"><i class="fa-solid fa-comment-dots"></i>&nbsp; ${escapeHtml(complaint.adminResponse)}</div>`
+                : `<div class="response-box empty">No response yet. You'll see updates here once an administrator reviews your complaint.</div>`}
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Status Timeline</h2></div>
+          <div class="panel-body">
+            <ul class="status-track" id="status-timeline"></ul>
+          </div>
+        </div>
+      </div>
+    `;
+
+    renderStatusTimeline(document.getElementById("status-timeline"), complaint);
+  });
+</script>
+</body>
+</html>

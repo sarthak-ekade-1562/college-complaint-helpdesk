@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusVoice | Student Complaint Management System</title>
+<meta name="description" content="A frontend-only Student Complaint Management System built with HTML, CSS and JavaScript.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span> CampusVoice</div>
+    <nav class="nav-actions">
+      <a href="student-login.html" class="btn btn-ghost btn-sm"><span class="full">Student</span> Login</a>
+      <a href="admin-login.html" class="btn btn-outline btn-sm"><span class="full">Admin</span> Login</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Register</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <span class="hero-eyebrow">CEP PROJECT · FY B.TECH INFORMATION TECHNOLOGY</span>
+      <h1>Every campus complaint, tracked from report to resolution.</h1>
+      <p class="lead">CampusVoice gives students one place to raise issues — Wi-Fi outages, broken furniture, leaking pipes — and gives administrators the tools to triage, respond and resolve them, transparently.</p>
+      <div class="hero-actions">
+        <a href="register.html" class="btn btn-accent">Register as Student <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="admin-login.html" class="btn btn-outline-light">Admin Portal</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>10</strong><span>Complaint categories</span></div>
+        <div><strong>4</strong><span>Status stages tracked</span></div>
+        <div><strong>100%</strong><span>Runs in your browser</span></div>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <h3><i class="fa-solid fa-timeline"></i>&nbsp; Complaint CMP-2026-0001</h3>
+      <ul class="timeline-mini">
+        <li><span class="dot"></span> Submitted by a student with category, location and priority.</li>
+        <li><span class="dot"></span> Picked up by an administrator and moved to In Progress.</li>
+        <li><span class="dot"></span> Resolved with a written response visible to the student.</li>
+        <li><span class="dot"></span> Status updates reflect instantly on the student's tracker.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head">
+      <h2>Built for both sides of a complaint</h2>
+      <p>A focused feature set that mirrors how a real college grievance desk operates.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-file-circle-plus"></i></div>
+        <h3>Guided complaint submission</h3>
+        <p>Students describe the issue once, tagging category, location and priority so it reaches the right desk.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+        <h3>Search and filter</h3>
+        <p>Administrators narrow hundreds of complaints down by status, category or priority in a click.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-route"></i></div>
+        <h3>Visual status tracking</h3>
+        <p>A clear timeline shows every complaint moving from Pending to In Progress to Resolved.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-comments"></i></div>
+        <h3>Admin responses</h3>
+        <p>Every status change can carry a written note, so students know exactly what happened.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-chart-pie"></i></div>
+        <h3>Live dashboards</h3>
+        <p>Both students and administrators see up-to-date counts the moment something changes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-mobile-screen"></i></div>
+        <h3>Works on any device</h3>
+        <p>A responsive layout with a mobile-friendly sidebar keeps dashboards usable on a phone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="how-it-works">
+  <div class="container">
+    <div class="section-head">
+      <h2>How it works</h2>
+      <p>From registration to resolution in four steps.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">Step 1</div>
+        <h4>Register</h4>
+        <p>Students create an account with their roll number, department and year.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">Step 2</div>
+        <h4>Submit</h4>
+        <p>Raise a complaint with a category, description, location and priority.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">Step 3</div>
+        <h4>Review</h4>
+        <p>Administrators search, filter and update the status of every complaint.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">Step 4</div>
+        <h4>Resolve</h4>
+        <p>Students see the outcome and any response the moment it's recorded.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="portals">
+  <div class="container">
+    <div class="section-head">
+      <h2>Choose your portal</h2>
+      <p>Separate, focused experiences for students and administrators.</p>
+    </div>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="icon"><i class="fa-solid fa-user-plus"></i></div>
+        <h3>New student</h3>
+        <p>Create your account to start submitting and tracking complaints.</p>
+        <a href="register.html" class="btn btn-primary btn-block">Register</a>
+      </div>
+      <div class="role-card">
+        <div class="icon"><i class="fa-solid fa-right-to-bracket"></i></div>
+        <h3>Returning student</h3>
+        <p>Log back in to view the status of your existing complaints.</p>
+        <a href="student-login.html" class="btn btn-outline btn-block">Student Login</a>
+      </div>
+      <div class="role-card">
+        <div class="icon"><i class="fa-solid fa-user-shield"></i></div>
+        <h3>Administrator</h3>
+        <p>Log in to manage, filter and resolve incoming complaints.</p>
+        <a href="admin-login.html" class="btn btn-outline btn-block">Admin Login</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>
+      <div class="brand"><span class="brand-mark"><i class="fa-solid fa-graduation-cap"></i></span> CampusVoice</div>
+      <p style="max-width:34ch;margin-top:10px;">A frontend-only academic prototype for a Student Complaint Management System.</p>
+    </div>
+    <div class="footer-links">
+      <a href="index.html#features">Features</a>
+      <a href="index.html#how-it-works">How it works</a>
+      <a href="student-login.html">Student Login</a>
+      <a href="admin-login.html">Admin Login</a>
+    </div>
+  </div>
+  <p class="footer-note">CEP Project · FY B.Tech Information Technology · Built with HTML5, CSS3 &amp; Vanilla JavaScript</p>
+</footer>
+
+<script src="js/common.js"></script>
+</body>
+</html>
