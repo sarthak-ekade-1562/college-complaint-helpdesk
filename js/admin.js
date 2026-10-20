@@ -22,6 +22,12 @@ function getAllComplaints() {
   return readList(LS_KEYS.COMPLAINTS).sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
 }
 
+function getComplaintById(complaintId) {
+  const complaints = readList(LS_KEYS.COMPLAINTS);
+  return complaints.find(c => c.complaintId === complaintId) || null;
+}
+
+
 /* ---------- Update status / response ---------- */
 function updateComplaintStatus(complaintId, newStatus) {
   const complaints = readList(LS_KEYS.COMPLAINTS);
